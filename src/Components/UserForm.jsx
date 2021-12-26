@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useStore from "../store"
+import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 
 
 export default function UserForm() {
@@ -130,6 +131,7 @@ export default function UserForm() {
                 <button onClick={addUserHandler} className="btn btn-primary my-2">
                     Submit
                 </button>
+                <Link to="/users">User Details</Link>
             </form>
         </div>
     );
