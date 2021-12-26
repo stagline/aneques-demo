@@ -1,33 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useStore from "../store"
 
 
-export default function UserForm({ addData, data }) {
+export default function UserForm() {
 
-    const { bears, increasePopulation } = useStore()
-    console.log(bears, "-----controls----")
+    const { usersData, addUser } = useStore()
+    const [input, setInput] = useState({
+        firstName: "",
+        email: "",
+        number: "",
+        country: "",
+        information: "",
+        fileupload: ""
+    });
 
     const {
         register,
-        handleSubmit,
         formState: { errors },
     } = useForm();
 
-    const onSubmit = (data) => {
-        console.log(data);
+    const handleChange = (e) => {
+        setInput({ ...input, [e.target.name]: e.target.value })
+    }
+
+    const addUserHandler = (e) => {
+        e.preventDefault();
+        addUser(input);
     };
+
+    console.log(usersData, "-----usersData----")
 
     return (
         <div>
             <h1>User Form</h1>
-            <button onClick={increasePopulation} >Increase Bears</button>
-            <form className="mx-4 p-4" onSubmit={handleSubmit(onSubmit)} >
+            <form className="mx-4 p-4" >
                 <div className="form-row ">
                     <div className="form-group col-md-6 my-2">
                         <label >First Name : </label>
                         <input
                             {...register('firstName', {
+                                value: input.firstName,
+                                name: "firstName",
+                                onChange: handleChange,
                                 required: true,
                                 maxLength: 20,
                                 pattern: /^[A-Za-z]+$/i,
@@ -44,6 +59,9 @@ export default function UserForm({ addData, data }) {
                         <label >Email : </label>
                         <input
                             {...register('email', {
+                                value: input.email,
+                                name: "email",
+                                onChange: handleChange,
                                 required: true,
                                 pattern: /\S+@\S+\.\S+/,
                             })}
@@ -57,6 +75,9 @@ export default function UserForm({ addData, data }) {
                         <label >Phone Number : </label>
                         <input
                             {...register('phone', {
+                                value: input.phone,
+                                name: "phone",
+                                onChange: handleChange,
                                 required: true,
                                 pattern: /^[0-9]+$/i,
                             })}
@@ -68,7 +89,12 @@ export default function UserForm({ addData, data }) {
                     </div>
                     <div className="form-group col-md-4 my-2">
                         <label >Country : </label>
-                        <select {...register('country')}>
+                        <select
+                            {...register('country', {
+                                value: input.country,
+                                name: "country",
+                                onChange: handleChange,
+                            })}>
                             <option value="INDIA">INDIA</option>
                             <option value="UK">UK</option>
                             <option value="USA">USA</option>
@@ -78,6 +104,9 @@ export default function UserForm({ addData, data }) {
                         <label >Additional Information : </label>
                         <input
                             {...register('information', {
+                                value: input.information,
+                                name: "information",
+                                onChange: handleChange,
                                 required: true,
                             })}
                         />
@@ -88,20 +117,17 @@ export default function UserForm({ addData, data }) {
                     <div className="form-group col-md-6 my-2">
                         <label >File Upload : </label>
                         <input
-                            {...register('file', {
-                                required: true,
+                            {...register('fileupload', {
+                                value: input.fileupload,
+                                name: "fileupload",
+                                onChange: handleChange,
                             })}
                             type="file"
-                            name="picture"
                             accept=".pdf"
                         />
-                        {errors?.information?.type === 'required' && (
-                            <p style={{ color: "red" }}>This field is required</p>
-                        )}
-                        {errors?.information?.type === 'accept' && <p style={{ color: "red" }}>only pdf</p>}
                     </div>
                 </div>
-                <button type="submit" className="btn btn-primary my-2">
+                <button onClick={addUserHandler} className="btn btn-primary my-2">
                     Submit
                 </button>
             </form>
